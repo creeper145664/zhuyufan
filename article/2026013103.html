@@ -7,6 +7,10 @@
     <title>通知公告 - 湖北省襄阳市第四中学 高一(20)班 班级网站</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+    <!-- marked 核心 -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <script src="render.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -31,12 +35,14 @@
         @layer utilities {
             .text-shadow { text-shadow: 0 2px 4px rgba(0,0,0,0.1); }
             .text-gradient { background-clip: text; -webkit-background-clip: text; color: transparent; }
+            .notice-card-hover { transition: all 0.3s ease; }
+            .notice-card-hover:hover { transform: translateY(-2px); box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.1); }
         }
     </style>
 </head>
 
 <body class="bg-gradient-to-br from-light to-blue-50 min-h-screen">
-    <!-- 导航栏 -->
+    <!-- 导航栏（与原页面完全相同） -->
     <nav class="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur shadow-sm z-50 transition-all duration-300" id="navbar">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
@@ -56,7 +62,7 @@
                     <div class="ml-10 flex items-baseline space-x-4">
                         <a href="../index.html" class="text-gray-500 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">首页</a>
                         <a href="../Sidebar/Rules.html" class="text-gray-500 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">数据管理规则</a>
-                        <a href="#" class="text-dark hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 border-b-2 border-primary">课程表</a>
+                        <a href="#" class="text-dark hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 border-b-2 border-primary">通知公告</a>
                         <a href="#" class="text-gray-500 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">关于我们</a>
                     </div>
                 </div>
@@ -74,52 +80,30 @@
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                 <a href="../index.html" class="text-gray-500 hover:text-primary block px-3 py-2 rounded-md text-base font-medium">首页</a>
                 <a href="../Sidebar/Rules.html" class="text-gray-500 hover:text-primary block px-3 py-2 rounded-md text-base font-medium">数据管理规则</a>
-                <a href="#" class="text-dark hover:text-primary block px-3 py-2 rounded-md text-base font-medium bg-blue-50">课程表</a>
+                <a href="#" class="text-dark hover:text-primary block px-3 py-2 rounded-md text-base font-medium bg-blue-50">通知公告</a>
                 <a href="#" class="text-gray-500 hover:text-primary block px-3 py-2 rounded-md text-base font-medium">关于我们</a>
             </div>
         </div>
     </nav>
 
-    <!-- 页面标题 -->
-    <section class="pt-32 pb-8 px-4 sm:px-6 lg:px-8 bg-white">
+    <!-- 英雄区域（只保留标题壳） -->
+    <section class="pt-32 pb-16 md:pt-40 md:pb-24 px-4 sm:px-6 lg:px-8 bg-white">
         <div class="container mx-auto">
             <div class="max-w-4xl mx-auto text-center">
-                <h1 class="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-accent text-gradient">
-                    课程安排
+                <!-- 标题由 JS 动态注入 -->
+                <h1 id="page-title" class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-primary to-accent text-gradient">
+                    <!-- 占位 -->
                 </h1>
-                <p class="text-gray-600 text-lg">
-                    高一(20)班 课程时间表
-                </p>
             </div>
         </div>
     </section>
 
-    <!-- 课程表图片区域 -->
-    <section class="py-8 px-4 sm:px-6 lg:px-8">
-        <div class="container mx-auto">
-            <div class="max-w-6xl mx-auto">
-                <div class="bg-white rounded-2xl shadow-xl p-4 md:p-8">
-                    <div class="flex flex-col items-center justify-center">
-                        <!-- 课程表图片 -->
-                        <img 
-                            src="classes.png" 
-                            alt="高一(20)班课程表" 
-                            class="w-full max-w-4xl h-auto rounded-lg shadow-lg border border-gray-200"
-                            onerror="this.onerror=null; this.src='https://via.placeholder.com/800x600/3B82F6/FFFFFF?text=课程表图片加载失败'"
-                        >
-                        
-                        <!-- 图片说明 -->
-                        <div class="mt-6 text-center text-gray-600">
-                            <p class="mb-2">
-                                <i class="fas fa-info-circle text-primary mr-2"></i>
-                                注：课程表图片显示当前学期的课程安排
-                            </p>
-                            <p class="text-sm">
-                                <i class="fas fa-clock text-secondary mr-2"></i>
-                                如有变动，请以班主任通知为准
-                            </p>
-                        </div>
-                    </div>
+    <!-- 通知正文容器 -->
+    <section class="py-16 bg-light">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-4xl mx-auto">
+                <div id="content">
+                    <!-- JS 会把整个通知卡片插到这里 -->
                 </div>
             </div>
         </div>
@@ -152,7 +136,7 @@
                         <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">数据分析</a></li>
                         <li><a href="#match-reports" class="text-gray-400 hover:text-white transition-colors duration-200">比赛报表</a></li>
                         <li><a href="../Sidebar/Rules.html" class="text-gray-400 hover:text-white transition-colors duration-200">数据管理规则</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">课程表</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">通知公告</a></li>
                         <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">关于我们</a></li>
                     </ul>
                 </div>
@@ -192,7 +176,7 @@
         <i class="fas fa-arrow-up"></i>
     </button>
 
-    <!-- 导航交互 -->
+    <!-- 导航交互（与原页面相同） -->
     <script>
         const navbar = document.getElementById('navbar');
         const backToTop = document.getElementById('back-to-top');
